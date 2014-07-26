@@ -12,7 +12,7 @@ Details in the code.
 
 **Machin** 
 
-Uses the formula `pi/4 = 4*arctan(1/5) - arctan(1/239)`. Features gmpy2 and an accelerated formula for arctan. 
+Uses the formula `pi/4 = 4*arctan(1/5) - arctan(1/239)`. Features gmpy2's hardware level algorithm and an accelerated formula by Euler for arctan. 
 
 **Chudnovsky**
 
@@ -27,6 +27,6 @@ Benchmarks
 
 gmpy2: 100,000 digits in  2.5 seconds
 
-Decimal arctan: 100,000 digits in 45 seconds
+Decimal arctan: 10,000 digits in 0.5 seconds, 100,000 digits in 47.4 seconds
 
 
