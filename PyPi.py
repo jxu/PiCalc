@@ -1,6 +1,7 @@
 # Pi generation program
 from decimal import *
 import gmpy2, time
+from gmpy2 import mpz, mpfr
 
 def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
     
@@ -11,13 +12,13 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
         gmpy2.get_context().precision = bits_precision + 20
         
         # Automatic type conversion (int to mpfr in division)
-        one_5th = gmpy2.mpfr("1") / 5
-        one_239th = gmpy2.mpfr("1") / 239
+        one_5th = mpfr("1") / 5
+        one_239th = mpfr("1") / 239
         
         pi_fourths = 4*gmpy2.atan(one_5th) - gmpy2.atan(one_239th)
         pi = 4*pi_fourths
         
-        print(pi)
+        return pi
         
     else:   
         getcontext().prec = digits + 10     # 10 digit safety
@@ -37,7 +38,7 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
                 
                 divisor += 2
                 # 1/((x^(n+2)) 
-                current_term = current_term // -x_squared
+                current_term //= -x_squared
    
                 if current_term == 0:
                     break
@@ -58,7 +59,7 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
                 
                 divisor = (two_loop_count + 1) * x_squared_plus_1
                 current_term *= two_loop_count 
-                current_term = current_term // divisor
+                current_term //= divisor
                 if current_term == 0:
                     break
                 current_value += current_term
@@ -73,13 +74,45 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
             pi_fourths = 4 * atan(5) - atan(239)
         pi = 4 * pi_fourths
         
-        print(pi)
+        return pi
                 
                 
-                
+def chudnovsky(digits, use_bs=False):
+    # 20 safety digits because lots of calculations
+    scale = mpz(10**(digits+20))    
+
+    bits_precision = int(gmpy2.log2(10) * digits)
+    
+    if not use_bs:
+        k = mpz(1)
+        a_k = scale
+        a_sum = scale
+        b_sum = mpz(0)
+        C = mpz(640320)
+        C_cubed_over_24 = C**3 // 24
+        
+        while True:
+            a_k *= -(6*k-5) * (2*k-1) * (6*k-1)
+            a_k //= k**3 * C_cubed_over_24
+            a_sum += a_k
+            b_sum += k * a_k
+            k += 1
+            if a_k == 0:
+                break
+        
+        total_sum = 13591409 * a_sum + 545140134 * b_sum
+        pi = (426880 * gmpy2.isqrt(10005 * scale**2) * scale) // total_sum
+        # gmpy2 precision ~ 12 digits
+        gmpy2.get_context().precision = bits_precision + 40 
+
+        return gmpy2.div(mpfr(pi), scale)
+        
+        
+
+
 start_time = time.time()               
                 
-machin(digits=100000, use_accelerated_atan=True)
+chudnovsky(digits=10000000)
 # Credit: rogeriopvl
 print("%s seconds" % (time.time() - start_time))
 
