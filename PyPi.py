@@ -1,6 +1,6 @@
 # Pi generation program
 from decimal import *
-import gmpy2, time
+import gmpy2, time, math
 from gmpy2 import mpz, mpfr
 
 def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
@@ -83,6 +83,7 @@ def chudnovsky(digits, use_bs=True):
     scale = mpz(10**(digits+20))    
 
     bits_precision = int(gmpy2.log2(10) * digits)
+
     # gmpy2 precision ~ 20 digits
     gmpy2.get_context().precision = bits_precision + 67
     
@@ -128,8 +129,8 @@ def chudnovsky(digits, use_bs=True):
                 if a == 0:
                     Pab = Qab = mpz(1)
                 else:
-                    Pab = mpz((6*a-5) * (2*a-1) * (6*a-1))
-                    Qab = mpz(a**3 * C_cubed_over_24)
+                    Pab = (6*a-5) * (2*a-1) * (6*a-1)
+                    Qab = a**3 * C_cubed_over_24
                 Tab = Pab * (13591409 + 545140134*a)
                 if a & 1:
                     Tab *= -1 
@@ -144,10 +145,13 @@ def chudnovsky(digits, use_bs=True):
                 Tab = Qmb * Tam + Pam * Tmb
                 
             return Pab, Qab, Tab
-        
-        digits_per_term = gmpy2.log10(C_cubed_over_24/72)
+
+        print("hi")
+        digits_per_term = math.log10(C_cubed_over_24/72) 
+        print("bye")
+
         N = int(digits/digits_per_term + 1)
-        P, Q, T = bs(0, N)
+        P, Q, T = bs(mpz(0), mpz(N))
         scale = mpz(10**digits)
         z = (Q*426880*gmpy2.isqrt(10005 * scale**2)) // T
         

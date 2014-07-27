@@ -40,4 +40,4 @@ Euler arctan:	10,000 digits in 0.3 s,		100,000 digits in 34.4 s
 
 Regular:		10,000 digits in 0.01 s,	100,000 digits in 0.8 s,	1,000,000 digits in 81.1 s	
 
-Bs:				10,000 digits in 0.05 s,	100,000 digits in 1.9 s,	1,000,000 digits in 33.8 s,		10,000,000 digits in 575.1 s
+Bs:				10,000 digits in 0.007 s,	100,000 digits in 0.2 s,	1,000,000 digits in 3.5 s,		10,000,000 digits in 90 s
