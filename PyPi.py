@@ -77,11 +77,14 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
         return pi
                 
                 
-def chudnovsky(digits, use_bs=False):
+                
+def chudnovsky(digits, use_bs=True):
     # 20 safety digits because lots of calculations
     scale = mpz(10**(digits+20))    
 
     bits_precision = int(gmpy2.log2(10) * digits)
+    # gmpy2 precision ~ 20 digits
+    gmpy2.get_context().precision = bits_precision + 67
     
     if not use_bs:
         k = mpz(1)
@@ -102,11 +105,53 @@ def chudnovsky(digits, use_bs=False):
         
         total_sum = 13591409 * a_sum + 545140134 * b_sum
         pi = (426880 * gmpy2.isqrt(10005 * scale**2) * scale) // total_sum
-        # gmpy2 precision ~ 12 digits
-        gmpy2.get_context().precision = bits_precision + 40 
+ 
 
         return gmpy2.div(mpfr(pi), scale)
+    
+    else:
+        # Use binary splitting
+        digits += 20
+        C = mpz(640320)
+        C_cubed_over_24 = C**3 // 24
+        def bs(a, b):
+            # Shamelessly stolen from craig-wood.com
+            # Like this entire program
+            
+            # a(a) = +/- (13591409 + 545140134a)
+            # p(a) = (6a-5)(2a-1)(6a-1)
+            # b(a) = 1
+            # q(a) = a^3 * C_cubed_over_24
+            
+            if b - a == 1:
+                # Directly compute
+                if a == 0:
+                    Pab = Qab = mpz(1)
+                else:
+                    Pab = mpz((6*a-5) * (2*a-1) * (6*a-1))
+                    Qab = mpz(a**3 * C_cubed_over_24)
+                Tab = Pab * (13591409 + 545140134*a)
+                if a & 1:
+                    Tab *= -1 
+            
+            else:
+                m = (a+b) // 2  # Midpoint
+                # Recursively divide and conquer
+                Pam, Qam, Tam = bs(a, m)
+                Pmb, Qmb, Tmb = bs(m, b)
+                Pab = Pam * Pmb
+                Qab = Qam * Qmb
+                Tab = Qmb * Tam + Pam * Tmb
+                
+            return Pab, Qab, Tab
         
+        digits_per_term = gmpy2.log10(C_cubed_over_24/72)
+        N = int(digits/digits_per_term + 1)
+        P, Q, T = bs(0, N)
+        scale = mpz(10**digits)
+        z = (Q*426880*gmpy2.isqrt(10005 * scale**2)) // T
+        
+        return mpfr(z) / scale
         
 
 
