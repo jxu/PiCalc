@@ -7,13 +7,12 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
     
     if use_gmpy2:
         
-        bits_precision = int(gmpy2.log2(10) * digits)
+        bits_precision = int(math.log2(10) * digits)
         # Precision + 20 bits for safety
         gmpy2.get_context().precision = bits_precision + 20
         
-        # Automatic type conversion (int to mpfr in division)
-        one_5th = mpfr("1") / 5
-        one_239th = mpfr("1") / 239
+        one_5th = mpfr("1") / mpfr("5")
+        one_239th = mpfr("1") / mpfr("239")
         
         pi_fourths = 4*gmpy2.atan(one_5th) - gmpy2.atan(one_239th)
         pi = 4*pi_fourths
@@ -31,7 +30,7 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
             divisor = 1
             x_squared = x * x
             current_term = scale // x    
-                
+
             while True:
                 # Thanks to Raymond Hettinger for solving issues
                 current_value += current_term // divisor
@@ -42,24 +41,23 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
    
                 if current_term == 0:
                     break
-            
             return Decimal(current_value) / scale
         
         def accelerated_atan(x):
             # Calculate arctan(1/x) using Euler's formula 
             # Combines 2 terms, 1 division and 2 multiplications per loop
             x_squared_plus_1 = x * x + 1
-            current_term = scale * x // x_squared_plus_1
+            current_term = (scale * x) // x_squared_plus_1
             two_loop_count = 2
             divisor = x_squared_plus_1
 
-            
             current_value = current_term    # For coefficient 1/1
-            while True:     
-                
+            
+            while True:        
                 divisor = (two_loop_count + 1) * x_squared_plus_1
                 current_term *= two_loop_count 
                 current_term //= divisor
+                
                 if current_term == 0:
                     break
                 current_value += current_term
@@ -82,7 +80,7 @@ def chudnovsky(digits, use_bs=True):
     # 20 safety digits because lots of calculations
     scale = mpz(10**(digits+20))    
 
-    bits_precision = int(gmpy2.log2(10) * digits)
+    bits_precision = int(math.log2(10) * digits)
 
     # gmpy2 precision ~ 20 digits
     gmpy2.get_context().precision = bits_precision + 67
@@ -104,11 +102,10 @@ def chudnovsky(digits, use_bs=True):
             if a_k == 0:
                 break
         
-        total_sum = 13591409 * a_sum + 545140134 * b_sum
-        pi = (426880 * gmpy2.isqrt(10005 * scale**2) * scale) // total_sum
+        total_sum = mpfr(13591409 * a_sum + 545140134 * b_sum)
+        pi = (426880 * gmpy2.sqrt(mpfr(10005))) / total_sum
  
-
-        return gmpy2.div(mpfr(pi), scale)
+        return pi*scale
     
     else:
         # Use binary splitting
@@ -146,22 +143,19 @@ def chudnovsky(digits, use_bs=True):
                 
             return Pab, Qab, Tab
 
-        print("hi")
         digits_per_term = math.log10(C_cubed_over_24/72) 
-        print("bye")
 
         N = int(digits/digits_per_term + 1)
         P, Q, T = bs(mpz(0), mpz(N))
-        scale = mpz(10**digits)
-        z = (Q*426880*gmpy2.isqrt(10005 * scale**2)) // T
-        
-        return mpfr(z) / scale
+        Q, T = mpfr(Q), mpfr(T)
+        z = (Q * 426880 * gmpy2.sqrt(mpfr(10005))) / T
+        return z
         
 
 
 start_time = time.time()               
                 
-chudnovsky(digits=10000000)
+chudnovsky(digits=10000000, use_bs=True)
 # Credit: rogeriopvl
 print("%s seconds" % (time.time() - start_time))
 
