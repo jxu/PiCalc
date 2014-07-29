@@ -78,7 +78,7 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
                 
 def chudnovsky(digits, use_bs=True):
     # 20 safety digits because lots of calculations
-    scale = mpz(10**(digits+20))    
+    scale = 10**(mpz(digits+20))  
 
     bits_precision = int(math.log2(10) * digits)
 
@@ -155,7 +155,7 @@ def chudnovsky(digits, use_bs=True):
 
 start_time = time.time()               
                 
-chudnovsky(digits=10000000, use_bs=True)
+chudnovsky(digits=100000000, use_bs=True)
 # Credit: rogeriopvl
 print("%s seconds" % (time.time() - start_time))
 

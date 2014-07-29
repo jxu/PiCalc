@@ -7,7 +7,6 @@ Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes
 To do: 
 
 - Improve documentation in code
-
 - Multi-threading: a possibility?
 
 Formulas
@@ -26,6 +25,7 @@ Uses a very fast rapidly convergent algorithm that can be seen here: http://en.w
 
 Benchmarks
 ----------
+100,000,000 digits achieved
 
 **Machin**
 
@@ -40,15 +40,14 @@ Euler arctan:	10,000 digits in 0.3 s,		100,000 digits in 34.4 s
 
 Regular:		10,000 digits in 0.01 s,	100,000 digits in 0.8 s,	1,000,000 digits in 81.1 s	
 
-Bs:				10,000 digits in 0.005 s,	100,000 digits in 0.1 s,	1,000,000 digits in 2.3 s,		10,000,000 digits in 57.4 s
+Bs:				10,000 digits in 0.004 s,	100,000 digits in 0.1 s,	1,000,000 digits in 1.6 s,		10,000,000 digits in 28.9 s, 	100,000,000 digits in 432.3 s
 
 Speed Optimizations 
 -------------------
-
 - Replaced `gmpy2.log2` with `math.log2`
-
 - Replaced gmpy2 integer square root multiplied by `scale**2` with mpfr square root
     - 33% less time
-
+- Use `mpz` exponentiation for `scale`
+    - 50% less time
 
 
