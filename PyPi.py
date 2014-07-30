@@ -7,9 +7,8 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
     
     if use_gmpy2:
         
-        bits_precision = int(math.log2(10) * digits)
         # Precision + 20 bits for safety
-        gmpy2.get_context().precision = bits_precision + 20
+        gmpy2.get_context().precision = int(math.log2(10) * digits) + 20
         
         one_5th = mpfr("1") / mpfr("5")
         one_239th = mpfr("1") / mpfr("239")
@@ -80,10 +79,7 @@ def chudnovsky(digits, use_bs=True):
     # 20 safety digits because lots of calculations
     scale = 10**(mpz(digits+20))  
 
-    bits_precision = int(math.log2(10) * digits)
-
-    # gmpy2 precision ~ 20 digits
-    gmpy2.get_context().precision = bits_precision + 67
+    gmpy2.get_context().precision = int(math.log2(10) * (digits + 20)) 
     
     if not use_bs:
         k = mpz(1)
@@ -150,12 +146,32 @@ def chudnovsky(digits, use_bs=True):
         Q, T = mpfr(Q), mpfr(T)
         z = (Q * 426880 * gmpy2.sqrt(mpfr(10005))) / T
         return z
-        
 
+def gauss_legendre(digits):
+    gmpy2.get_context().precision = int(math.log2(10) * (digits + 5))
+    
+    iterations = int(math.log2(digits)) 
+    
+    # Direct translation of algorithm
+    a = mpfr(1)
+    b = 1 / gmpy2.sqrt(mpfr(2))
+    t = mpfr(1)/4
+    x = mpfr(1)
+
+
+    for i in range(iterations):
+        y = a
+        a = (a + b) / 2
+        b = gmpy2.sqrt(b * y)
+        t = t - x * (y-a)**2
+        x = 2 * x
+        
+    pi = ((a+b)**2) / (4*t)
+    return pi
 
 start_time = time.time()               
                 
-chudnovsky(digits=100000000, use_bs=True)
+gauss_legendre(digits=10000000)
 # Credit: rogeriopvl
 print("%s seconds" % (time.time() - start_time))
 
