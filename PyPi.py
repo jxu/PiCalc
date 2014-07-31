@@ -1,4 +1,5 @@
 # Pi generation program
+# Based on an article on craig-wood.com with some gmpy2 changes
 from decimal import *
 import gmpy2, time, math
 from gmpy2 import mpz, mpfr
@@ -10,8 +11,8 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
         # Precision + 20 bits for safety
         gmpy2.get_context().precision = int(math.log2(10) * digits) + 20
         
-        one_5th = mpfr("1") / mpfr("5")
-        one_239th = mpfr("1") / mpfr("239")
+        one_5th = mpfr("1") / 5
+        one_239th = mpfr("1") / 239
         
         pi_fourths = 4*gmpy2.atan(one_5th) - gmpy2.atan(one_239th)
         pi = 4*pi_fourths
@@ -109,9 +110,6 @@ def chudnovsky(digits, use_bs=True):
         C = mpz(640320)
         C_cubed_over_24 = C**3 // 24
         def bs(a, b):
-            # Shamelessly stolen from craig-wood.com
-            # Like this entire program
-            
             # a(a) = +/- (13591409 + 545140134a)
             # p(a) = (6a-5)(2a-1)(6a-1)
             # b(a) = 1
@@ -142,7 +140,7 @@ def chudnovsky(digits, use_bs=True):
         digits_per_term = math.log10(C_cubed_over_24/72) 
 
         N = int(digits/digits_per_term + 1)
-        P, Q, T = bs(mpz(0), mpz(N))
+        P, Q, T = bs(0, N)
         Q, T = mpfr(Q), mpfr(T)
         z = (Q * 426880 * gmpy2.sqrt(mpfr(10005))) / T
         return z
@@ -169,9 +167,34 @@ def gauss_legendre(digits):
     pi = ((a+b)**2) / (4*t)
     return pi
 
+def borwein(digits):
+    gmpy2.get_context().precision = int(math.log2(10) * (digits + 10))
+    
+    sqrt_2 = gmpy2.sqrt(mpfr(2))
+    a_n = sqrt_2
+    b_n = mpz(0)
+    p_n = 2 + sqrt_2
+    
+    while True:
+        sqrt_a_n = gmpy2.sqrt(a_n)
+        a_n_1 = (sqrt_a_n + 1/sqrt_a_n) / 2
+        b_n_1 = (1 + b_n) * sqrt_a_n / (a_n + b_n)
+        p_n_1 = (1 + a_n_1) * p_n * b_n_1 / (1 + b_n_1)
+        
+        if p_n_1 == p_n:
+            break
+        
+        a_n = a_n_1
+        b_n = b_n_1
+        p_n = p_n_1
+        
+    return p_n
+     
+
 start_time = time.time()               
-                
-gauss_legendre(digits=10000000)
+         
+chudnovsky(digits=100000000)
+
 # Credit: rogeriopvl
 print("%s seconds" % (time.time() - start_time))
 

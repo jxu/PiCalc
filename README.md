@@ -5,7 +5,6 @@ Several algorithms for arbitrary precision calculation of pi. Plus, how could I 
 Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Older versions have non-fixed point math. Includes a cheesy timing program so I don't rewrite the code multiple times to try to get performance. 
 
 To do: 
-
 - Better documentation 
 - Multi-threading: a possibility?
 
@@ -15,32 +14,25 @@ Details in the code.
 
 **Machin:** Uses the formula `pi/4 = 4*arctan(1/5) - arctan(1/239)`. Features gmpy2's hardware level algorithm and an accelerated formula by Euler for arctan. 
 
-**Chudnovsky:** Uses a very fast rapidly convergent algorithm that can be seen here: http://en.wikipedia.org/wiki/Chudnovsky_algorithm. Includes a regular implementation with gmpy2 and a binary-splitting method with gmpy2.  
+**Chudnovsky:** Uses a very fast [rapidly convergent algorithm](http://en.wikipedia.org/wiki/Chudnovsky_algorithm). Includes a regular implementation with gmpy2 and a binary-splitting method with gmpy2.  
 
-**Gauss-Legendre:** Uses a second order convergence algorithm based on the arithmatic-geometric mean. Only `log2(n)` iterations are needed.
+**Gauss-Legendre:** Uses a [second order convergence algorithm](https://en.wikipedia.org/wiki/Gauss-Legendre_algorithm) based on the arithmatic-geometric mean. Only `log2(n)` iterations are needed.
 
+**Borwein:** Just for fun, PyPi includes [Borwein's 1984 algorithm](https://en.wikipedia.org/wiki/Borwein's_algorithm#Quartic_convergence_.281984.29) with quartic convergence. Not as fast as Gauss-Legendre though, probably because of the 4 divisions per iteration. 
 
 Benchmarks
 ----------
+    Digits >>>          10,000        100,000        1,000,000    10,000,000    100,000,000
+    ---------------------------------------------------------------------------------------
+    Machin gmpy2        0.06 s        1.7 s          30.5 s       -             -
+    Machin decimal      0.4 s         38.9 s         -            -             -
+    Machin Euler        0.3 s         34.4 s         -            -             -
+    Chudnovksy regular  0.01 s        0.7 s          79.7 s       -             -
+    Chudnovsky BS       0.004 s       0.1 s          1.6 s        28.9 s        432.3 s
+    Gauss-Legendre      0.01 s        0.4 s          5.8 s        101.5 s       -
+    Borwein             0.05 s        1.4 s          22.6 s       -             -
 
-**Machin**
 
-gmpy2 arctan: 	10,000 digits in 0.06 s,	100,000 digits in 1.8 s, 	1,000,000 digits in 31.2 s
-
-Decimal arctan:	10,000 digits in 0.4 s,		100,000 digits in 38.9 s
-
-Euler arctan:	10,000 digits in 0.3 s,		100,000 digits in 34.4 s
-
-
-**Chudnovsky**
-
-Regular:		10,000 digits in 0.01 s,	100,000 digits in 0.7 s,	1,000,000 digits in 79.7 s	
-
-Bs:				10,000 digits in 0.004 s,	100,000 digits in 0.1 s,	1,000,000 digits in 1.6 s,		10,000,000 digits in 28.9 s, 	100,000,000 digits in 432.3 s
-
-**Gauss-Legendre**
-
-				10,000 digits in 0.01 s, 	100,000 digits in 0.4 s, 	1,000,000 digits in 5.8 s,		10,000,000 digits in 101.5 s
 
 Speed Optimizations 
 -------------------

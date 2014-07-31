@@ -44,8 +44,7 @@ def squareroot_test():
         x = gmpy2.sqrt(gmpy2.mpfr(3))
     print_timer()
   
-division_test()
-print()  
+  
 squareroot_test()
     
 
