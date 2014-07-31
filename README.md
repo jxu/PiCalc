@@ -24,13 +24,13 @@ Benchmarks
 ----------
     Digits >>>          10,000        100,000        1,000,000    10,000,000    100,000,000
     ---------------------------------------------------------------------------------------
-    Machin gmpy2        0.06 s        1.7 s          30.5 s       -             -
-    Machin decimal      0.4 s         38.9 s         -            -             -
+    Machin gmpy2        0.06 s        1.7 s          30.5 s       542.9 s       -
+    Machin Taylor       0.4 s         38.9 s         -            -             -
     Machin Euler        0.3 s         34.4 s         -            -             -
     Chudnovksy regular  0.01 s        0.7 s          79.7 s       -             -
     Chudnovsky BS       0.004 s       0.1 s          1.6 s        28.9 s        432.3 s
     Gauss-Legendre      0.01 s        0.4 s          5.8 s        101.5 s       -
-    Borwein             0.05 s        1.4 s          22.6 s       -             -
+    Borwein             0.05 s        1.4 s          22.6 s       327.8 s       -
 
 
 
