@@ -2,7 +2,7 @@ PyPi
 ====
 
 Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? 
-Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Older versions have non-fixed point math. Includes a cheesy timing program so I don't rewrite the code multiple times to try to get performance. 
+Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Older versions have non-fixed point math. Includes a cheesy timing program so I don't rewrite the code multiple times to try to get performance. I threw in some C++ code for no good reason.
 
 To do: 
 - Better documentation 

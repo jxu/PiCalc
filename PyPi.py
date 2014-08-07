@@ -19,7 +19,8 @@ def machin(digits, use_gmpy2=False, use_accelerated_atan=True):
         
         return pi
         
-    else:   
+    else:
+        # No gmpy2 zone 
         getcontext().prec = digits + 10     # 10 digit safety
         scale = 10**(digits + 10)           # fixed point
         
@@ -193,7 +194,7 @@ def borwein(digits):
 
 start_time = time.time()               
          
-chudnovsky(digits=100000000)
+borwein(digits=10000000)
 
 # Credit: rogeriopvl
 print("%s seconds" % (time.time() - start_time))
