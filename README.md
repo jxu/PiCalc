@@ -2,7 +2,7 @@ PyPi
 ====
 
 Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? 
-Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Older versions have non-fixed point math. Includes a cheesy timing program so I don't rewrite the code multiple times to try to get performance. I threw in some C++ code for no good reason.
+Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Older versions have non-fixed point math. Includes a cheesy timing program so I don't rewrite the code multiple times to try to get performance. I threw in some C++ code for no good reason, other than to see if gcc could do anything for speed.
 
 To do: 
 - Better documentation 
@@ -22,6 +22,8 @@ Details in the code.
 
 Benchmarks
 ----------
+Python
+
     Digits >>>          10,000        100,000        1,000,000    10,000,000    100,000,000
     ---------------------------------------------------------------------------------------
     Machin gmpy2        0.06 s        1.7 s          30.5 s       542.9 s       -
@@ -31,11 +33,23 @@ Benchmarks
     Chudnovsky BS       0.004 s       0.1 s          1.6 s        28.9 s        432.3 s
     Gauss-Legendre      0.01 s        0.4 s          5.8 s        101.5 s       -
     Borwein             0.05 s        1.4 s          22.6 s       327.8 s       -
+	
+C++
+
+    Digits >>>          10,000        100,000        1,000,000    10,000,000    100,000,000
+    ---------------------------------------------------------------------------------------
+    Chudnovsky BS       0.03 s        0.1 s          1.5 s        21.6 s        331.1 s
+    	
+
+	
+	
 
 
 
-Speed Optimizations 
--------------------
+
+
+Speed Optimizations (Python)
+----------------------------
 - Replaced `gmpy2.log2` with `math.log2`
 - Replaced gmpy2 integer square root multiplied by `scale**2` with mpfr square root
     - 33% less time
