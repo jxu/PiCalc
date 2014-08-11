@@ -30,12 +30,6 @@ typedef std::tuple<mpz_int, mpz_int, mpz_int>   return_values;
 return_values bs(const mpz_int &a, const mpz_int &b)
 {
     const mpz_int C_cubed_over_24 = 10939058860032000ll; // C = 640320;
-
-    if (b - a > 1000000)
-    {
-        std::cout << "Current a, b: " << a << " " << b << std::endl;
-    }
-
     mpz_int Pab, Qab, Tab;
 
     if (b - a == 1)

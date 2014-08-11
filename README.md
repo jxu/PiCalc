@@ -2,14 +2,14 @@ PyPi
 ====
 
 Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? 
-Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Older versions have non-fixed point math. Includes a cheesy timing program so I don't rewrite the code multiple times to try to get performance. I threw in some C++ code for no good reason, other than to see if gcc could do anything for speed.
+Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Includes a timing program to verify certain functions. I threw in some C++ code to see if gcc could do anything for speed. Any more speed increases would have to be done without Python. 
 
 To do: 
 - Better documentation 
 - Multi-threading: a possibility?
 
-Formulas
---------
+Algorithms
+----------
 Details in the code.
 
 **Machin:** Uses the formula `pi/4 = 4*arctan(1/5) - arctan(1/239)`. Features gmpy2's hardware level algorithm and an accelerated formula by Euler for arctan. 
@@ -42,10 +42,6 @@ C++
     	
 
 	
-	
-
-
-
 
 
 Speed Optimizations (Python)
