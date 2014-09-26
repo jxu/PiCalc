@@ -1,6 +1,5 @@
 // Pi calculations program (rewrite in C++ for speed)
 // Compile with -O3 for best results
-
 #include <boost/multiprecision/gmp.hpp>
 #include <iostream>
 #include <math.h>
@@ -21,7 +20,6 @@ namespace boost{ namespace multiprecision{
 class gmp_int;
 
 typedef number<gmp_int >         mpz_int;
-
 }}
 
 typedef std::tuple<mpz_int, mpz_int, mpz_int>   return_values;
@@ -41,7 +39,9 @@ return_values bs(const mpz_int &a, const mpz_int &b)
         else
         {
             Pab = (6*a-5) * (2*a-1) * (6*a-1);
-            Qab = a*a*a * C_cubed_over_24;
+            mpz_int a_cubed;
+            mpz_pow_ui(a_cubed.backend().data(), a.backend().data(), 3);
+            Qab = a_cubed * C_cubed_over_24;
 
         }
         Tab = Pab * (13591409 + 545140134*a);
@@ -93,12 +93,13 @@ mpf_float chudnovsky(int digits)
 
     const mpf_float float_10005 = 10005;
 
+    std::cout << "hi" << '\n';
     return (Q_float * 426880 * sqrt(float_10005)) / T_float;
 }
 
 int main()
 {
-    int digits = 1000000000; // int limit is 2,147,483,647
+    int digits = 10000000; // int limit is 2,147,483,647
 
     std::cout.precision(digits + 10);
     std::cout << std::fixed;

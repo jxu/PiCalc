@@ -1,12 +1,13 @@
 PyPi
 ====
 
-Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? 
+Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? (Edit: It appears the name has already been taken by the package index. Oh well.)
 Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Includes a timing program to verify certain functions. I threw in some C++ code to see if gcc could do anything for speed. Any more speed increases would have to be done without Python. 
 
 To do: 
 - Better documentation 
 - Multi-threading: a possibility?
+- Rewrite C++ with gmpxx
 
 Algorithms
 ----------
@@ -44,12 +45,12 @@ C++
 	
 
 
-Speed Optimizations (Python)
-----------------------------
-- Replaced `gmpy2.log2` with `math.log2`
+###Speed Optimizations (Python)
+
+- Replaced `gmpy2.log2` with `math.log2` (less precision)
 - Replaced gmpy2 integer square root multiplied by `scale**2` with mpfr square root
     - 33% less time
-- Use `mpz` exponentiation for `scale`
+- Use `mpz` instead of `int` exponentiation for `scale`
     - 50% less time
 
 
