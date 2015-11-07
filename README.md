@@ -7,6 +7,7 @@ Based on Nick Craig-Wood's python implementations, but with my own gmpy2 and C++
 To do: 
 - Better documentation 
 - Multi-threading: a possibility?
+- Code profiling
 
 Algorithms
 ----------
@@ -38,7 +39,7 @@ C++
 
     Digits >>>          10,000        100,000        1,000,000    10,000,000    100,000,000
     ---------------------------------------------------------------------------------------
-    Chudnovsky BS       0.03 s        0.3 s          1.5 s        21.6 s        331.1 s
+    Chudnovsky BS       0.03 s        0.09 s         1.3 s        22.1 s        331.1 s
 	
 
 

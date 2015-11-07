@@ -8,7 +8,7 @@
 void *__gxx_personality_v0;
 void *_Unwind_Resume;
 
-const int EXTRA_DIGITS = 50; // Margin
+const int EXTRA_DIGITS = 20; // Margin
 
 void bs(const mpz_class &a, const mpz_class &b, mpz_class &Pab, mpz_class &Qab, mpz_class &Tab)
 {
@@ -23,9 +23,9 @@ void bs(const mpz_class &a, const mpz_class &b, mpz_class &Pab, mpz_class &Qab, 
         else
         {
             Pab = (6*a-5) * (2*a-1) * (6*a-1);
-            mpz_class a_cubed;
-            mpz_pow_ui(a_cubed.get_mpz_t(), a.get_mpz_t(), 3);
-            Qab = a_cubed * C_cubed_over_24;
+            //mpz_class a_cubed;
+            //mpz_pow_ui(a_cubed.get_mpz_t(), a.get_mpz_t(), 3);
+            Qab = a * a * a * C_cubed_over_24;
         }
         Tab = Pab * (13591409 + 545140134*a);
 
@@ -52,21 +52,22 @@ void bs(const mpz_class &a, const mpz_class &b, mpz_class &Pab, mpz_class &Qab, 
     // std::cout << "P Q T: " << Pab << ", " << Qab << ", " << Tab << std::endl;
 };
 
-mpf_class chudnovsky(int digits)
+mpf_class chudnovsky(const int digits)
 {
-    int bin_digits = int(digits * log2(10));
-    const double digits_per_term = log10(151931373056000ll); // log(C_cubed_over_24 / 72);
 
-    mpz_class N = int((bin_digits + EXTRA_DIGITS) / digits_per_term + 1);
+    const double digits_per_term = log10(151931373056000ll); // log(C_cubed_over_24 / 72);
+    mpz_class N = int((digits + EXTRA_DIGITS) / digits_per_term + 1);
 
     std::cout << "Binary splitting max: " << N << std::endl;
 
+    mpz_class P, Q, T;
+    bs(0, N, P, Q, T);
+
+
+    int bin_digits = int(digits * log2(10));
     int precision = bin_digits + EXTRA_DIGITS;
     std::cout << "Precision: " << precision << std::endl;
     mpf_set_default_prec(precision);
-
-    mpz_class P, Q, T;
-    bs(0, N, P, Q, T);
 
     mpf_class Q_float(Q);
     mpf_class T_float(T);
