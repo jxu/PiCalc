@@ -1,13 +1,12 @@
 PyPi
 ====
 
-Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? (Edit: It appears the name has already been taken by the package index. Oh well.)
-Based on Nick Craig-Wood's python implementations, but with my own gmpy2 changes. Includes a timing program to verify certain functions. I threw in some C++ code to see if gcc could do anything for speed. Any more speed increases would have to be done without Python. 
+Several algorithms for arbitrary precision calculation of pi. Plus, how could I pass up that name? (Edit: Old name was taken by the package index. It doesn't apply anymore, anyway.)
+Based on Nick Craig-Wood's python implementations, but with my own gmpy2 and C++ changes. Includes an experimental timing program to verify certain functions. Rewritten in C++ and with gmp for speed.
 
 To do: 
 - Better documentation 
 - Multi-threading: a possibility?
-- Rewrite C++ with gmpxx
 
 Algorithms
 ----------
@@ -39,9 +38,7 @@ C++
 
     Digits >>>          10,000        100,000        1,000,000    10,000,000    100,000,000
     ---------------------------------------------------------------------------------------
-    Chudnovsky BS       0.03 s        0.1 s          1.5 s        21.6 s        331.1 s
-    	
-
+    Chudnovsky BS       0.03 s        0.3 s          1.5 s        21.6 s        331.1 s
 	
 
 

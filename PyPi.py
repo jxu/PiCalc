@@ -197,7 +197,7 @@ def borwein(digits):
 def main():
     start_time = time.time()               
              
-    print(borwein(100))
+    print(chudnovsky_bs(30000))
     
     print("%s seconds" % (time.time() - start_time))
     
