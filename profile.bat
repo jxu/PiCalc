@@ -1,0 +1,1 @@
+gprof pi.exe > profile.txt
